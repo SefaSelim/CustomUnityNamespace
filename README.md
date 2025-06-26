@@ -5,30 +5,39 @@
 #### Public Void SetTimer(Action OnComplete, float timer, bool isLooping);
 Recommended for single usage, in Start or single entries ect. if it is already in action, it will skip the overriding value, if you want to override use ForceSetTimer() instead.
 
+
 #### Public Void SetTimer_ForUpdate(float timer);
 Use it in Update Method, returns a boolean in a single frame after the duration.
+
 
 #### Public Void ForceSetTimer(Action OnComplete, float timer, bool isLooping);
 Whatever the current or before situation, overrides the new values and resets the timer with new values.
 
+
 #### Public Void OverrideTimer(float newTime);
 Overrides the timer only at current case, if you want to override all the timers please use the Set functions instead.
+
 
 #### Public Void AddAction(Action actionToAdd);
 Adds the specified function to the action list. Can be used to register multiple callbacks for when the timer completes.
 
+
 #### Public Void ResetActions();
 Resets all the functions that has been added before and resets the timer and count.
+
 
 #### Public Void RemoveAction(Action actionToRemove);
 Removes a specified function into the action list. Inverse of the AddAction function.
 
+
 #### Public Void Stop();
 Stops the timer, does not reset count or any property.
+
 
 #### Public Void Tick();
 Most important function, Tick() function must have been in the Update() function at the top, it should tick every frame and you should tick the every timer that you created before.
 Be careful about ticking only in one update function, otherwise it could cause some wrong values.
+
 
 ### External Accesses
 
