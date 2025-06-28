@@ -22,6 +22,9 @@ namespace Custom.Timers
         private bool completeFeedback = false;
         private bool onAction = false;
         
+        private bool isWaitInput = false;
+        private bool reqInput;
+        
         #region Readonly Properties
 
         // You can access from outside the class
@@ -33,13 +36,32 @@ namespace Custom.Timers
 
         #endregion
 
+
+        public void Update_WaitUntil(Action onComplete,float time, bool waitUntilFor)
+        {
+            reqInput = waitUntilFor;
+            isWaitInput = true;
+            OnComplete = onComplete;
+            
+            if (!onAction)
+            {
+                onUpdateMethodDontAction = true; // dont execute function
+                
+                totalTime = timer;
+                timer = time;
+                isLooping = false;
+
+                onAction = true;
+            }
+        }
+        
         
         /// <summary>
         /// Use it Only in Update Method
         /// </summary>
         /// <param name="timer">Duration Of The Timer</param>
         /// <returns>Return True When Executed End Of The Timer</returns>
-        public bool SetTimer_ForUpdate(float timer)
+        public bool Update_Trigger(float timer)
         {
             if (!onAction)
             {
@@ -113,7 +135,7 @@ namespace Custom.Timers
         // RemoveAction(Action actionToRemove) if you want to remove a specific function from the timer. Not works with lambda expressions. Use ResetActions() instead.
         // Stop() stops the timer but does not reset the actions. If you want to reset the actions, use ResetActions() instead.
 
-        public void OverrideTimer(float newTime)
+        public void OverrideTime(float newTime)
         {
             timer = Mathf.Max(0f, newTime);
         }
@@ -159,7 +181,7 @@ namespace Custom.Timers
         /// </summary>
         public void Tick()
         {
-            if (timer > 0 && onAction)
+            if (onAction)
             {
                 timer -= Time.deltaTime;
 
@@ -171,9 +193,18 @@ namespace Custom.Timers
                     {
                         ExecuteTheFunctions();
                     }
+
+                    if (reqInput && isWaitInput)
+                    {
+                        ExecuteTheFunctions();
+                        onAction = false;
+                    }
+                    
                     playCount++;
 
 
+                    if (isWaitInput) return;
+                    
                     if (isLooping)
                     {
                         timer = totalTime;
